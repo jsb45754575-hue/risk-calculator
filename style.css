@@ -1,0 +1,26 @@
+function calculate() {
+  const capital = parseFloat(document.getElementById("capital").value);
+  const entry = parseFloat(document.getElementById("entry").value);
+  const stop = parseFloat(document.getElementById("stop").value);
+  const target = parseFloat(document.getElementById("target").value);
+  const riskPercent = parseFloat(document.getElementById("riskPercent").value);
+
+  if (!capital || !entry || !stop || !riskPercent) {
+    alert("모든 값을 입력해주세요.");
+    return;
+  }
+
+  const riskAmount = capital * (riskPercent / 100);
+  const lossPerUnit = Math.abs(entry - stop);
+  const positionSize = riskAmount / lossPerUnit;
+  const rewardPerUnit = Math.abs(target - entry);
+  const reward = rewardPerUnit * positionSize;
+  const rrRatio = reward / riskAmount;
+
+  document.getElementById("result").innerHTML = `
+    <p>💰 최대 손실 금액: ${riskAmount.toFixed(0)} 원</p>
+    <p>📦 적정 매수 수량: ${positionSize.toFixed(2)}</p>
+    <p>🎯 예상 수익: ${reward.toFixed(0)} 원</p>
+    <p>⚖️ 손익비(RR): ${rrRatio.toFixed(2)} : 1</p>
+  `;
+}

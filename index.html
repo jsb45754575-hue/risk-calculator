@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>통합 리스크 계산기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📊 통합 리스크 계산기</h1>
+
+    <label>총 자본 (원)</label>
+    <input type="number" id="capital" placeholder="예: 1000000">
+
+    <label>진입가</label>
+    <input type="number" id="entry">
+
+    <label>손절가</label>
+    <input type="number" id="stop">
+
+    <label>목표가</label>
+    <input type="number" id="target">
+
+    <label>리스크 허용 비율 (%)</label>
+    <input type="number" id="riskPercent" placeholder="예: 2">
+
+    <button onclick="calculate()">계산하기</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
