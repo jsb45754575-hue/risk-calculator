@@ -3,45 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro 리스크 계산기</title>
+  <title>Pro Risk Engine</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>📊 Pro 리스크 계산기</h1>
+  <div class="container center">
+    <h1>📊 Pro Risk Engine</h1>
+    <p class="subtitle">당신은 어떤 투자자입니까?</p>
 
-    <label>매매 방향</label>
-    <select id="direction">
-      <option value="long">롱 (매수)</option>
-      <option value="short">숏 (매도)</option>
-    </select>
+    <div class="choice-box">
+      <a href="stock.html" class="choice stock">
+        📈 주식 투자자
+      </a>
 
-    <label>총 자본 (원)</label>
-    <input type="number" id="capital">
-
-    <label>진입가</label>
-    <input type="number" id="entry">
-
-    <label>손절가</label>
-    <input type="number" id="stop">
-
-    <label>목표가</label>
-    <input type="number" id="target">
-
-    <label>레버리지 (배)</label>
-    <input type="number" id="leverage" value="1">
-
-    <label>수수료 (%)</label>
-    <input type="number" id="fee" value="0.05">
-
-    <label>허용 리스크 (%)</label>
-    <input type="number" id="riskPercent" value="2">
-
-    <button onclick="calculate()">계산하기</button>
-
-    <div id="result" class="result"></div>
+      <a href="crypto.html" class="choice crypto">
+        📊 코인 / 선물 트레이더
+      </a>
+    </div>
   </div>
-
-  <script src="script.js"></script>
 </body>
 </html>

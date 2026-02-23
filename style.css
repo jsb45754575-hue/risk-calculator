@@ -54,3 +54,42 @@ button {
   border-radius: 8px;
   background: #111;
 }
+
+.center {
+  text-align: center;
+}
+
+.subtitle {
+  margin-bottom: 30px;
+  opacity: 0.8;
+}
+
+.choice-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.choice {
+  padding: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  color: black;
+}
+
+.stock {
+  background: #4cafef;
+}
+
+.crypto {
+  background: #00c896;
+}
+
+.back {
+  display: block;
+  margin-top: 20px;
+  text-decoration: none;
+  opacity: 0.7;
+}
