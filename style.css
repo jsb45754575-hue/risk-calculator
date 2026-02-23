@@ -1,26 +1,56 @@
-function calculate() {
-  const capital = parseFloat(document.getElementById("capital").value);
-  const entry = parseFloat(document.getElementById("entry").value);
-  const stop = parseFloat(document.getElementById("stop").value);
-  const target = parseFloat(document.getElementById("target").value);
-  const riskPercent = parseFloat(document.getElementById("riskPercent").value);
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f1115;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+}
 
-  if (!capital || !entry || !stop || !riskPercent) {
-    alert("모든 값을 입력해주세요.");
-    return;
-  }
+.container {
+  width: 95%;
+  max-width: 420px;
+  margin-top: 30px;
+  background: #1a1d24;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
 
-  const riskAmount = capital * (riskPercent / 100);
-  const lossPerUnit = Math.abs(entry - stop);
-  const positionSize = riskAmount / lossPerUnit;
-  const rewardPerUnit = Math.abs(target - entry);
-  const reward = rewardPerUnit * positionSize;
-  const rrRatio = reward / riskAmount;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  document.getElementById("result").innerHTML = `
-    <p>💰 최대 손실 금액: ${riskAmount.toFixed(0)} 원</p>
-    <p>📦 적정 매수 수량: ${positionSize.toFixed(2)}</p>
-    <p>🎯 예상 수익: ${reward.toFixed(0)} 원</p>
-    <p>⚖️ 손익비(RR): ${rrRatio.toFixed(2)} : 1</p>
-  `;
+label {
+  font-size: 14px;
+  margin-top: 10px;
+  display: block;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #00c896;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background: #111;
 }
