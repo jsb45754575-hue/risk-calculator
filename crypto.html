@@ -1,49 +1,204 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>코인/선물 리스크 계산기</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>코인 트레이더 플랫폼</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://s3.tradingview.com/tv.js"></script>
+
+<style>
+body{
+  margin:0;
+  background:#0f1117;
+  font-family:Arial;
+  color:white;
+}
+
+.container{
+  display:flex;
+  height:100vh;
+}
+
+/* 좌측 2/3 차트 */
+.chart-area{
+  width:66%;
+  height:100vh;
+  border-right:1px solid #1f2937;
+}
+
+/* 우측 1/3 계산기 */
+.calc-area{
+  width:34%;
+  padding:25px;
+  overflow-y:auto;
+  background:#111827;
+}
+
+h2{ margin-top:0; }
+
+input{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  background:#1c1f26;
+  border:none;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#00c853;
+  border:none;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:20px;
+  background:#1c1f26;
+  padding:15px;
+  border-radius:8px;
+}
+
+.good{ color:#00e676; }
+.bad{ color:#ff5252; }
+
+canvas{
+  margin-top:20px;
+  background:#1c1f26;
+  padding:10px;
+  border-radius:8px;
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>📊 코인 / 선물 리스크 계산기</h1>
 
-    <label>매매 방향</label>
-    <select id="direction">
-      <option value="long">롱</option>
-      <option value="short">숏</option>
-    </select>
+<div class="container">
 
-    <label>총 자본 (원)</label>
-    <input type="number" id="capital">
-
-    <label>진입가</label>
-    <input type="number" id="entry">
-
-    <label>손절가</label>
-    <input type="number" id="stop">
-
-    <label>목표가</label>
-    <input type="number" id="target">
-
-    <label>레버리지 (배)</label>
-    <input type="number" id="leverage" value="1">
-
-    <label>수수료 (%)</label>
-    <input type="number" id="fee" value="0.05">
-
-    <label>허용 리스크 (%)</label>
-    <input type="number" id="riskPercent" value="2">
-
-    <button onclick="calculateCrypto()">계산하기</button>
-
-    <div id="result" class="result"></div>
-
-    <a href="index.html" class="back">← 메인으로</a>
+  <!-- 차트 -->
+  <div class="chart-area">
+    <div id="tradingview_chart" style="height:100%;"></div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- 계산기 -->
+  <div class="calc-area">
+    <h2>코인 리스크 계산</h2>
+
+    <input type="text" id="capital" placeholder="총 자본">
+    <input type="text" id="riskPercent" placeholder="리스크 %">
+    <input type="text" id="entry" placeholder="진입가">
+    <input type="text" id="stop" placeholder="손절가">
+    <input type="text" id="target" placeholder="목표가">
+    <input type="number" id="leverage" placeholder="레버리지" value="1">
+
+    <button onclick="calculate()">계산하기</button>
+
+    <div class="result" id="output"></div>
+    <canvas id="lossChart"></canvas>
+  </div>
+
+</div>
+
+<script>
+// TradingView 차트
+new TradingView.widget({
+  "container_id": "tradingview_chart",
+  "width": "100%",
+  "height": "100%",
+  "symbol": "BINANCE:BTCUSDT",
+  "interval": "60",
+  "timezone": "Asia/Seoul",
+  "theme": "dark",
+  "style": "1",
+  "locale": "kr"
+});
+
+// ===== 숫자 포맷 =====
+function formatNumber(value){
+  return Number(value).toLocaleString("ko-KR");
+}
+
+function removeComma(value){
+  return value.replace(/,/g, "");
+}
+
+function addComma(inputId){
+  const input = document.getElementById(inputId);
+  input.addEventListener("input", function(){
+    let value = removeComma(this.value);
+    if(!isNaN(value) && value !== ""){
+      this.value = formatNumber(value);
+    }
+  });
+}
+
+addComma("capital");
+addComma("entry");
+addComma("stop");
+addComma("target");
+
+// ===== 계산 =====
+let chart;
+
+function calculate(){
+
+const capital = parseFloat(removeComma(document.getElementById("capital").value));
+const riskPercent = parseFloat(removeComma(document.getElementById("riskPercent").value));
+const entry = parseFloat(removeComma(document.getElementById("entry").value));
+const stop = parseFloat(removeComma(document.getElementById("stop").value));
+const target = parseFloat(removeComma(document.getElementById("target").value));
+const leverage = parseFloat(document.getElementById("leverage").value);
+
+const riskAmount = capital * (riskPercent/100);
+const stopDistance = Math.abs(entry - stop);
+const positionSize = (riskAmount / stopDistance) * leverage;
+const realLoss = stopDistance * positionSize;
+const reward = Math.abs(target - entry) * positionSize;
+const rr = reward / realLoss;
+
+let rrColor = rr >= 2 ? "good" : "bad";
+
+document.getElementById("output").innerHTML = `
+포지션 수량: <b>${formatNumber(positionSize.toFixed(4))}</b><br>
+최대 손실: <b>${formatNumber(realLoss.toFixed(2))}</b><br>
+예상 수익: <b>${formatNumber(reward.toFixed(2))}</b><br>
+손익비(R:R): <b class="${rrColor}">${rr.toFixed(2)}</b>
+`;
+
+simulateLoss(capital, riskPercent);
+}
+
+// ===== 계좌 감소 그래프 =====
+function simulateLoss(capital, riskPercent){
+
+let balances = [];
+let balance = capital;
+
+for(let i=0;i<10;i++){
+  balance *= (1 - riskPercent/100);
+  balances.push(balance);
+}
+
+if(chart) chart.destroy();
+
+chart = new Chart(document.getElementById("lossChart"),{
+  type:"line",
+  data:{
+    labels:["1","2","3","4","5","6","7","8","9","10"],
+    datasets:[{
+      label:"연속 손실 시 계좌 감소",
+      data:balances,
+      borderColor:"#ff5252",
+      fill:false
+    }]
+  }
+});
+}
+</script>
+
 </body>
 </html>

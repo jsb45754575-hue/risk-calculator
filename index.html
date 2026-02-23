@@ -2,24 +2,39 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <title>Pro Trader Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Risk Engine</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container center">
-    <h1>📊 Pro Risk Engine</h1>
-    <p class="subtitle">당신은 어떤 투자자입니까?</p>
 
-    <div class="choice-box">
-      <a href="stock.html" class="choice stock">
-        📈 주식 투자자
-      </a>
+<header class="topbar">
+  <div class="logo">Pro Trader Lab</div>
+</header>
 
-      <a href="crypto.html" class="choice crypto">
-        📊 코인 / 선물 트레이더
-      </a>
+<div class="main-container">
+
+  <!-- 코인 영역 -->
+  <div class="block crypto" onclick="location.href='crypto.html'">
+    <div class="content">
+      <div class="icon">₿</div>
+      <h2>코인 · 선물</h2>
+      <p>레버리지 · 청산가 · 증거금 · 리스크 계산</p>
+      <button>코인 계산기 시작</button>
     </div>
   </div>
+
+  <!-- 주식 영역 -->
+  <div class="block stock" onclick="location.href='stock.html'">
+    <div class="content">
+      <div class="icon">📈</div>
+      <h2>주식 (한국 · 미국)</h2>
+      <p>리스크 기반 포지션 사이징 · 손익비 분석</p>
+      <button>주식 계산기 시작</button>
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
